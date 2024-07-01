@@ -21,7 +21,7 @@ class MemeSender(commands.Cog):
 		self.bot = bot		
 
 	def select_meme(self, filetype: Literal['video', 'image'], name: str='') -> ResponseInfo:
-		if platform.machine == 'aarch64':
+		if platform.machine() == 'aarch64':
 			# Bot is running off a phone
 			if filetype == 'video':
 				meme_dir = Path('/storage/emulated/0/Movies/Memes/')
