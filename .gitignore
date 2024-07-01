@@ -2,3 +2,5 @@
 token.txt
 discord.log
 **.pyc
+logs
+__pycache__
