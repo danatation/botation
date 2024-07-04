@@ -1,4 +1,5 @@
 import asyncio
+import logging as log
 from pathlib import Path
 
 import discord
@@ -10,10 +11,12 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 bot = commands.Bot(command_prefix='^', intents=intents)
+log.basicConfig(format='%(levelname)s: %(message)s', level=log.INFO)
 
 @bot.event
 async def on_ready():
-	print(bulb_speech(f'The bot has succesfully logged in as {bot.user}'))
+	message = bulb_speech(f'The bot has succesfully logged in as {bot.user}')
+	log.info(message)
 
 async def load_extensions():
 	for cog in Path('./cogs').glob('*'):

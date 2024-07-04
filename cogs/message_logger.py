@@ -1,4 +1,4 @@
-import logging
+import logging as log
 from datetime import datetime
 from pathlib import Path
 
@@ -19,8 +19,8 @@ class MessageLogger(commands.Cog):
 		if message.reference is not None and message.reference.message_id is not None:
 			reference = await message.channel.fetch_message(message.reference.message_id)
 			formatted_reply = f'⬐ Replying to {self.format_message(reference)}'
-			print(formatted_reply)
-		print(formatted_message)
+			log.info(formatted_reply)
+		log.info(formatted_message)
 
 		with open(f'logs/{message.channel}.txt', 'a') as f:
 			if formatted_reply != '':

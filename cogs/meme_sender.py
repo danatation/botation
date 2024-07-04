@@ -1,89 +1,100 @@
-import datetime
+import asyncio
+from datetime import datetime
 import platform
 import random
 from pathlib import Path
-from typing import Literal, TypedDict
+from typing import List, Literal, TypedDict
+from os import environ
 
 import discord
-from discord import TextChannel, app_commands
+from discord import IntegrationApplication, TextChannel, app_commands
 from discord.ext import commands, tasks
+from discord.webhook.async_ import interaction_message_response_params
 
+import config
 from utils import bulb_speech
 
 
-class ResponseInfo(TypedDict):
-	file: Path
-	attachment: discord.File
-	embed: discord.Embed
-
 class MemeSender(commands.Cog):
 	def __init__(self, bot):
-		self.bot = bot		
+		self.bot = bot
 
-	def select_meme(self, filetype: Literal['video', 'image'], name: str='') -> ResponseInfo:
-		if platform.machine() == 'aarch64':
-			# Bot is running off a phone
-			if filetype == 'video':
-				meme_dir = Path('/storage/emulated/0/Movies/Memes/')
-			else:
-				meme_dir = Path('/storage/emulated/0/Pictures/Memes')
-		else:
-			if filetype == 'video':
-				meme_dir = Path('/home/bulb/Videos/Memes')
-			else:
-				meme_dir = Path('/home/bulb/Pictures/Memes')
-		
-		files = sorted(meme_dir.glob('*'))
-		if name != '':
-			file_names = [file.name for file in files]
-			file_index = file_names.index(name)
-			# await interaction.followup.send(f'{name} does not exist. Fucking moron. try adding .mp4 at the end or soemthig')
-			file = files[file_index]
-		else:
-			file = random.choice(files)
-
-		date_added = datetime.datetime.fromtimestamp(file.stat().st_mtime, tz=datetime.timezone.utc)
-
-		attachment = discord.File(file)
-
-		embed = discord.Embed(title=f'{file.name}', timestamp=date_added)
-
-		return {
-			'file': file,
-			'attachment': attachment,
-			'embed': embed
+	def meme_picker(self, mimetype: Literal['video', 'image'] | None = None, name: str | None = None):
+		paths = {
+			'video': config.video_path,
+			'image': config.image_path
 		}
 
-	@app_commands.command(name='send_meme', description='If no name is specified, this sends a random meme from my computer')
-	async def send_meme(self, interaction: discord.Interaction, filetype: Literal['video', 'image'], name: str=''):
-		
-		response_data = self.select_meme(filetype, name=name)
-		embed = response_data['embed']
-		file = response_data['file']
-		attachment = response_data['attachment']
-
-		await interaction.response.defer()
-		
-		if filetype == 'image':
-			embed.set_image(url=f'attachment://{file.name}')
-			await interaction.followup.send(embed=embed, file=attachment)
-		elif isinstance(interaction.channel, TextChannel):
-			await interaction.followup.send(embed=embed)
-			await interaction.channel.send(file=attachment)
+		if mimetype:
+			work_dir = Path(paths[mimetype])
 		else:
-			await interaction.followup.send(bulb_speech('something went wrong'))
+			work_dir = Path(random.choice(list(paths.values())))
+
+		files = sorted(work_dir.glob('*'))
+		# size_limit = discord.Guild.filesize_limit
+		size_limit = 25 * 1_000_000 # servers have a limit of 25mb by default
+
+		if name is None:
+			while True:
+				file = random.choice(files)
+				if file.stat().st_size <= size_limit:
+					return file 
+		else:
+			file = work_dir / name
+			if file.exists():
+				if file.stat().st_size <= size_limit:
+					return file
+				else:
+					return 'The file is too big to be sent!'
+			else:
+				return 'The file couldn\'t be found!'
+
+	@app_commands.command(name='send_meme', description='If no name is specified, this sends a random meme from my computer')
+	async def meme_sender(self, interaction: discord.Interaction, filetype: Literal['video', 'image'] | None = None, name: str | None = None):
+		file = self.meme_picker(filetype, name)
+
+		if isinstance(file, str):
+			message = bulb_speech(file)
+			await interaction.response.send_message(message)
+		elif isinstance(interaction.channel, discord.TextChannel):
+			file_size = file.stat().st_size / 1_000_000 # in MB
+			file_date = datetime.fromtimestamp(file.stat().st_ctime)
+
+			if file.suffix in ['.mp4', '.mov']:
+				attachment = discord.File(file, filename=file.name)
+				embed = discord.Embed(timestamp=file_date, title=f'{file.name} · {file_size:.2f}MB')
+				embed.set_image(url=f'attachment://{file.name}')
+				await interaction.response.defer()
+				await interaction.followup.send(file=attachment, embed=embed)
+			else:
+				attachment = discord.File(file, filename=file.name)
+				await interaction.response.defer()
+				await interaction.followup.send(f'{file.name} · {file_size:.2f}MB', file=attachment)
+				await interaction.channel.send(f'{file_date.day}.{file_date.month}.{file_date.year} {file_date.hour}:{file_date.minute}')
 
 	@tasks.loop(minutes=30)
 	async def send_task(self):
+		# if self.send_task.current_loop == 0:
+			# return
+		
+		while True:
+			file = self.meme_picker()
+			if isinstance(file, Path):
+				break
 		channel = self.bot.get_channel(1243988547048964258)
 
-		if random.randint(0, 1) == 1:
-			response_info = self.select_meme('video')
-			await channel.send(embed=response_info['embed'])
-			await channel.send(file=response_info['attachment'])
+		file_size = file.stat().st_size / 1_000_000 # in MB
+		file_date = datetime.fromtimestamp(file.stat().st_ctime)
+
+		if file.suffix in ['.mp4', '.mov']:
+			attachment = discord.File(file, filename=file.name)
+			embed = discord.Embed(timestamp=file_date, title=f'{file.name} · {file_size:.2f}MB')
+			embed.set_image(url=f'attachment://{file.name}')
+			await channel.send(file=attachment, embed=embed)
 		else:
-			response_info = self.select_meme('image')
-			await channel.send(embed=response_info['embed'], file=response_info['attachment'])
+			attachment = discord.File(file, filename=file.name)
+			await channel.send(f'{file.name} · {file_size:.2f}MB', file=attachment)
+			await channel.send(f'{file_date.day}.{file_date.month}.{file_date.year} {file_date.hour}:{file_date.minute}')
 
 	@commands.Cog.listener()
 	async def on_ready(self):
