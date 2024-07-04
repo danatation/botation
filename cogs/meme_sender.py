@@ -91,13 +91,13 @@ class MemeSender(commands.Cog):
 
 		if file.suffix in ['.mp4', '.mov']:
 			attachment = discord.File(file, filename=file.name)
+			await channel.send(f'{file.name} · {file_size:.2f}MB', file=attachment)
+			await channel.send(f'{file_date.day}.{file_date.month}.{file_date.year} {file_date.hour}:{file_date.minute}')
+		else:
+			attachment = discord.File(file, filename=file.name)
 			embed = discord.Embed(timestamp=file_date, title=f'{file.name} · {file_size:.2f}MB')
 			embed.set_image(url=f'attachment://{file.name}')
 			await channel.send(file=attachment, embed=embed)
-		else:
-			attachment = discord.File(file, filename=file.name)
-			await channel.send(f'{file.name} · {file_size:.2f}MB', file=attachment)
-			await channel.send(f'{file_date.day}.{file_date.month}.{file_date.year} {file_date.hour}:{file_date.minute}')
 
 	@commands.Cog.listener()
 	async def on_ready(self):
