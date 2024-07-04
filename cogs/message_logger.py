@@ -5,6 +5,7 @@ from pathlib import Path
 import discord
 from discord.ext import commands
 
+import config
 
 class MessageLogger(commands.Cog):
 	def __init__(self, bot):
@@ -15,6 +16,9 @@ class MessageLogger(commands.Cog):
 	async def on_message(self, message: discord.Message):
 		formatted_message = self.format_message(message)
 		formatted_reply = ''
+
+		if config.log_messages == False:
+			return
 
 		if message.reference is not None and message.reference.message_id is not None:
 			reference = await message.channel.fetch_message(message.reference.message_id)

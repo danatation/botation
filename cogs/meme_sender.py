@@ -74,14 +74,17 @@ class MemeSender(commands.Cog):
 
 	@tasks.loop(minutes=30)
 	async def send_task(self):
-		# if self.send_task.current_loop == 0:
-			# return
+		if self.send_task.current_loop == 0:
+			return
 		
+		if config.meme_channel_id == None:
+			return
+
 		while True:
 			file = self.meme_picker()
 			if isinstance(file, Path):
 				break
-		channel = self.bot.get_channel(1243988547048964258)
+		channel = self.bot.get_channel(config.meme_channel_id)
 
 		file_size = file.stat().st_size / 1_000_000 # in MB
 		file_date = datetime.fromtimestamp(file.stat().st_ctime)
