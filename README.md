@@ -13,12 +13,15 @@ whenever a message is sent it appends the message into a text file named after t
 ![enter image description here](https://github.com/drunkromanian/plup/blob/main/images/meme1.png?raw=true)
 ###  calculator
 the calculator does not work due to rounding errors
+
 ![enter image description here](https://github.com/drunkromanian/plup/blob/main/images/math.png?raw=true)
 ### coinflip
 This was extremely hard to implement. 
+
 ![enter image description here](https://github.com/drunkromanian/plup/blob/main/images/coinflip.png?raw=true)
 ### christtt referencer
 if you mention the name of a piece of [christtt's discography](https://christtt.bandcamp.com/) then there will be a 1/6 chance the bot will shout you out for it
+
 ![enter image description here](https://github.com/drunkromanian/plup/blob/main/images/christtt.png?raw=true)
 ## setup
 * make a bot @ https://discord.com/developers/applications
