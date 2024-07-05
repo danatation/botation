@@ -64,7 +64,7 @@ class MemeSender(commands.Cog):
 				attachment = discord.File(file, filename=file.name)
 				await interaction.response.defer()
 				await interaction.followup.send(f'## {file.name} · {file_size:.2f}MB', file=attachment)
-				await interaction.channel.send(f'### {file_date.strftime('%d/%m/%Y %H:%M')}')
+				await interaction.channel.send(f'### {file_date.strftime(f'%d/%m/%Y %H:%M')}')
 			else:
 				attachment = discord.File(file, filename=file.name)
 				embed = discord.Embed(timestamp=file_date, title=f'{file.name} · {file_size:.2f}MB')
