@@ -58,13 +58,13 @@ class MemeSender(commands.Cog):
 			await interaction.response.send_message(message)
 		elif isinstance(interaction.channel, discord.TextChannel):
 			file_size = file.stat().st_size / 1_000_000 # in MB
-			file_date = datetime.fromtimestamp(file.stat().st_ctime)
+			file_date = datetime.fromtimestamp(file.stat().st_mtime)
 
 			if file.suffix in ['.mp4', '.mov']:
 				attachment = discord.File(file, filename=file.name)
 				await interaction.response.defer()
-				await interaction.followup.send(f'{file.name} · {file_size:.2f}MB', file=attachment)
-				await interaction.channel.send(f'{file_date.day}.{file_date.month}.{file_date.year} {file_date.hour}:{file_date.minute}')
+				await interaction.followup.send(f'## {file.name} · {file_size:.2f}MB', file=attachment)
+				await interaction.channel.send(f'### {file_date.strftime('%d/%m/%Y %H:%M')}')
 			else:
 				attachment = discord.File(file, filename=file.name)
 				embed = discord.Embed(timestamp=file_date, title=f'{file.name} · {file_size:.2f}MB')
