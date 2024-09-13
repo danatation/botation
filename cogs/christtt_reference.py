@@ -17,12 +17,13 @@ class ChristttReference(commands.Cog):
 				if album in message.content.lower():
 					response = random.choice(album_responses).format(album=album)
 					reply = f'{response} \nhttps://christtt.bandcamp.com/album/{christtt_albums[album]}'
-					await message.reply(reply)	
+					await message.reply(reply)
 				for track in christtt_tracks[album]:
 					if track in message.content.lower():
 						response = random.choice(track_responses).format(album=album, track=track)
 						reply = f'{response} \nhttps://christtt.bandcamp.com/track/{christtt_tracks[album][track]}'
 						await message.reply(reply)
+
 
 async def setup(bot):
 	await bot.add_cog(ChristttReference(bot))

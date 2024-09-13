@@ -5,7 +5,7 @@ from pathlib import Path
 import discord
 from discord.ext import commands
 
-from utils import bulb_speech
+from utils import rand_speech
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -15,7 +15,7 @@ log.basicConfig(format='%(levelname)s: %(message)s', level=log.INFO)
 
 @bot.event
 async def on_ready():
-	message = bulb_speech(f'The bot has succesfully logged in as {bot.user}')
+	message = rand_speech(f'The bot has succesfully logged in as {bot.user}')
 	log.info(message)
 
 async def load_extensions():

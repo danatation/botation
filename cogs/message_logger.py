@@ -7,6 +7,7 @@ from discord.ext import commands
 
 import config
 
+
 class MessageLogger(commands.Cog):
 	def __init__(self, bot):
 		self.bot = bot
@@ -17,7 +18,7 @@ class MessageLogger(commands.Cog):
 		formatted_message = self.format_message(message)
 		formatted_reply = ''
 
-		if config.log_messages == False:
+		if not config.log_messages:
 			return
 
 		if message.reference is not None and message.reference.message_id is not None:
@@ -38,16 +39,17 @@ class MessageLogger(commands.Cog):
 		date = message.created_at.strftime('%H:%M:%S')
 
 		if message.author == self.bot.user:
-			author = 'plup'
+			author = 'botation'
 		else:
 			author = message.author
 
-		if message.attachments != []:
+		if message.attachments:
 			attachments = message.attachments
 		else:
 			attachments = ''
 
 		return f'{date} {author}: "{message.content}" {attachments}'
+
 
 async def setup(bot):
 	await bot.add_cog(MessageLogger(bot))

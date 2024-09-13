@@ -1,4 +1,4 @@
-import random	
+import random
 
 from discord.ext import commands
 import discord
@@ -15,14 +15,14 @@ class AnnoyingReactor(commands.Cog):
 			'freaky',
 			'𝓯𝓻𝓮𝓪𝓴𝔂',
 			'👅',
-			'john pork',
-			'hawk tuah'
+			'john pork'
 		]
 
 		emojis = ['😂', '😹', '🖕', '🤣', '🫃', '🪑', '📴']
 
 		if message.content.lower() in unfunny_list:
 			await message.add_reaction(random.choice(emojis))
+
 
 async def setup(bot):
 	await bot.add_cog(AnnoyingReactor(bot))

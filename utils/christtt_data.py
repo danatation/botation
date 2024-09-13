@@ -2,23 +2,8 @@ album_responses = [
 	'HVLY SHIT... IS THAT A CHRISTTT {album} REFERENCE ???', 
 	'Is thhat a reference to the christtt album {album}?? Wow is it hot in here or is it just me',
 	'Wow... @christtt reference . This is a refenrece to the album {album}!',
-	'Fag',
-	'''John Zobele | christtt
-@ccchristtt
-is this a christtt reference?
-Quote
-bulb
-@drunkromanian
-·
-Jun 23
-I am the best programmer eever
-Image
-10:41 PM · Jun 23, 2024
-·
-2,254
- Views''',
 	'What if i wrote something really gay here that would be very funny',
-	'Hi it\'s me ! Bulb! I saw that you mentioned a album ({album}) of my liking. Please dm me after class',
+	'Hi it\'s me ! Daniel! I saw that you mentioned a album ({album}) of my liking. Please dm me after class',
 	'@Clyde are you seeing this ?? This guy mnade a christtt refernce ! ({album}) What do you mean you died',
 	'I hate potato puree it\'s stupid and bland and it sucks',
 	'Listen to this rq brah👀👀',
@@ -31,22 +16,8 @@ track_responses = [
 	'Have sex with me',
 	'Wow... @christtt reference . This is a refenrece to the song {album} - {track}',
 	'Fag - got',
-	'''John Zobele | christtt
-@ccchristtt
-is this a christtt reference?
-Quote
-bulb
-@drunkromanian
-·
-Jun 23
-I am the best programmer eever
-Image
-10:41 PM · Jun 23, 2024
-·
-2,254
- Views''',
 	'What if i wrote something really gay here that would be very funny',
-	'Hi it\'s me ! Bulb! I saw that you mentioned a song ({track} from {album}) of my liking. Please dm me after class',
+	'Hi it\'s me ! Daniel! I saw that you mentioned a song ({track} from {album}) of my liking. Please dm me after class',
 	'@Clyde are you seeing this ?? This guy mnade a christtt refernce! ({album} - {track}) What do you mean you died',
 	'once i got kfc and the fries were really bad like i would say they were uncooked so i gave them to my friend and he ate that shit like there was no tomorrow Is there something wrong with me {album} - {track} by christtt',
 	'Listen to this rq brah 👀👀😉',
